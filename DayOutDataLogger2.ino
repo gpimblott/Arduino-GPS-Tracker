@@ -153,16 +153,19 @@ void loop()
 //
 void writeFile(){
 
+  // If the GPS location is invalid then keep the
+  // GPS LED lit
   if( !gps.location.isValid() ) {
     digitalWrite( GPSled , HIGH );
     return;
   }
 
-  // Set the GPS led off and the SD led on
+  // Set the GPS led off (we have a position) 
+  // and the SD led on (we are writing)
   digitalWrite( GPSled , LOW );
   digitalWrite( SDled , HIGH );
 
-  // Get the current data
+  // Create the start of the csv string
   sprintf(data, "%d/%d/%d %02d:%02d:%02d, ", 
     gps.date.day(), gps.date.month() , gps.date.year(),
     gps.time.hour(), gps.time.minute(), gps.time.second() );
@@ -188,9 +191,11 @@ void writeFile(){
     csvFile.close();
   } 
   else {
+	// Something has gone wrong light the status LED
     digitalWrite( StatusLed , HIGH );
   }
 
+  // Finished writing so turn off the LED
   digitalWrite( SDled , LOW );
 }
 
